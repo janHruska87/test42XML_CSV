@@ -1,19 +1,16 @@
 # This is a sample Python script.
-import tkinter
-import xml.sax
-import xml.etree.ElementTree as ET
-from pathlib import Path
+import datetime
+from datetime import datetime
+import pathlib
+import tkinter as tk
+import tkinter.ttk as ttk
+
+from pygubu.widgets.pathchooserinput import PathChooserInput
+
 # Press Shift+F10 to execute it or replace it with your code.
 # Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
 import SQLiteAPI
 import TestCaseTREE as tc
-
-import pathlib
-import pygubu
-import tkinter as tk
-import tkinter.ttk as ttk
-import TestCaseTREE as tree
-from pygubu.widgets.pathchooserinput import PathChooserInput
 
 PROJECT_PATH = pathlib.Path(__file__).parent
 PROJECT_UI = PROJECT_PATH / "newproject"
@@ -95,7 +92,10 @@ class GuixmlimporterApp:
         pass
 
     def clickBtTestConnection(self):
-        SQLiteAPI.db.createTable(self, self.pathchooserDB.cget("path"))
+        """header = [("id","PRIMARY KEY"),("T42ObjectVersionId","TEXT"), ("T42ObjectId", "TEXT"), ("name","TEXT"),  ("version","INTEGER"), ("creationDate","DATETIME"), ("dOORSId","INTEGER"),  "automation", "specialFeature", "testType", "testDepth", "specialFeature", "testData", "description"]"""
+        header = [("id", "INTEGER PRIMARY KEY"), ("T42ObjectVersionId", "TEXT"), ("T42ObjectId", "TEXT"), ("name", "TEXT"),("version", "INTEGER"), ("creationDate", "DATETIME")]
+        tableName = datetime.now().strftime("%Y_%m_%d_%H_%M") + "_data"
+        SQLiteAPI.db.createTable(self, self.pathchooserDB.cget("path"),tableName,header)
         pass
 
 

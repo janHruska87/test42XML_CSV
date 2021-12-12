@@ -12,14 +12,17 @@ class db:
 
 
     def createTable(self,dbPath,tableName,headers):
+        """"Funkce pro vytvoreni tabulky, vstupni atributy jsou tableName a seznam sloupcu / datovych typu"""
+
+        """Prvni sloupec je vzdycky pouzit jako primary key, ostatni dle typu uvedeno v header"""
+        sql = "CREATE TABLE " + tableName + " ("
+        for e in headers:
+            sql = sql + e[0] + " " + e[1] + " , "
+        sql = sql.rstrip(" , ")
+        sql = sql + ");"
         try:
             self.sqliteConnection = sqlite3.connect(dbPath)
-            sqlite_create_table_query = '''CREATE TABLE SqliteDb_developers (
-                                        id INTEGER PRIMARY KEY,
-                                        name TEXT NOT NULL,
-                                        email text NOT NULL UNIQUE,
-                                        joining_date datetime,
-                                        salary REAL NOT NULL);'''
+            sqlite_create_table_query = sql
 
             cursor = self.sqliteConnection.cursor()
             print("Successfully Connected to SQLite")
