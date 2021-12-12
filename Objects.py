@@ -16,37 +16,33 @@ class TestCase:
         self.testDepth = ""
         self.specialFeature = ""
         self.testCaseEntries = list()
+        self.description = ""
+
 
 
 
     def toString(x):
-        "Create sorted list object from input object"
-        sortedX = list()
-        c = 1
-        for record in x.testCaseEntries:
-            if record.index == c:
-                sortedX.append(record)
-                c = c + 1
-            else:
-                pass
 
         "Create string for TestCaseEntries, be carefule with None value"
-        outString = ""
-        for entry in sortedX:
-            if entry.index != None:
-                outString = outString + str(entry.index) + " - "
-            if entry.type != None:
-                outString = outString + entry.type + " - "
-            if entry.text != None:
-                outString = outString + entry.text + " - "
-        "Final string which is append to output row (Values)"
-        outString = outString + "\n"
 
-        "Create string for basic TestCase parametrs"
-        values = [x.id, x.name, x.creationDate, x.dOORSId, x.automation, x.specialFeature, x.testDepth, x.testType,
-                  x.T42ObjectVersionId, x.T42ObjectId, outString]
-        "print(values)"
-        return values
+        values = list()
+        "for each object in x.testCaseEntries, fill description in test case"
+        for y in x.testCaseEntries:
+            testData=""
+            if y.text != None:
+                if y.index == 1:
+                    x.description = str(y.index) + " : " + y.text
+
+                else:
+                    testData = str(y.index - 1) + " : " + y.text
+                    value = [x.id,x.T42ObjectVersionId, x.T42ObjectId, x.name,  x.version, x.creationDate, x.dOORSId,  x.automation, x.specialFeature, x.testType, x.testDepth, x.specialFeature, testData, x.description]
+                    print(value)
+                    values.append(value)
+
+
+        print(values.__len__())
+        return(values)
+
 
 class TestCaseEntry:
     def __init__(self):

@@ -9,25 +9,25 @@ from Objects import TestCaseEntry as TCE
 import socket
 
 
-def writeToCSV(body,header):
+def writeToCSV(body,header, outPutDirectory):
     "Write result to CSV file"
-    with open(getFilename(),"w") as outFile:
+    with open(getFilename(outPutDirectory),"w") as outFile:
         "Settings for CSV writer, write header dict"
         writer = csv.writer(outFile, delimiter=";")
         writer.writerow(header.values())
 
         for tc in body:
-            writer.writerow(TC.toString(tc))
+            writer.writerows(TC.toString(tc))
 
-def getFilename():
-    filename = "/home/jan/Dokumenty/" + datetime.now().strftime("%Y-%m-%d-%H-%M") + ".csv"
+def getFilename(outPutDirectory):
+    filename = outPutDirectory + datetime.now().strftime("%Y-%m-%d-%H-%M") + ".csv"
     return filename
 
-def parse(file):
+def parse(file,outPutDirectory):
     content = open(file, "r")
     tree = ET.parse(content)
     root = tree.getroot()
-    header = {1: "Id",2:"T42ObjectId",3:"T42ObjectVersionId",4:"name",5:"Version",6:"CreationDate",7:"DOORSId",8:"Automation",9:"TestObjectCategory",10:"TestType",11:"TestDepth",12:"SpecialFeature",13:"TestCaseEntries"}
+    header = {1: "Id",2:"T42ObjectId",3:"T42ObjectVersionId",4:"Name",5:"Version",6:"CreationDate",7:"DOORSId",8:"Automation",9:"TestObjectCategory",10:"TestType",11:"TestDepth",12:"SpecialFeature",13:"TestCaseEntries",14:"Description"}
     #testCases = root.iter("TestCases")
     #functions = root.iter("Functions")
     testCases = list()
@@ -46,7 +46,7 @@ def parse(file):
                     elif tcc.tag.endswith(header[6]):
                         testCase.creationDate = tcc.text
                     elif tcc.tag.endswith(header[7]):
-                        testCase.creationDate = tcc.text
+                        testCase.dOORSId = tcc.text
                     elif tcc.tag.endswith(header[8]):
                         testCase.automation = tcc.text
                     elif tcc.tag.endswith(header[9]):
@@ -71,6 +71,6 @@ def parse(file):
                             testCase.testCaseEntries.append(testCaseEntry)
                 testCases.append(testCase)
 
-    writeToCSV(testCases,header)
+    writeToCSV(testCases,header,outPutDirectory)
     print("Nahrano: ", testCases.__len__())
     return testCases
