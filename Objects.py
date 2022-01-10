@@ -17,6 +17,8 @@ class TestCase:
         self.specialFeature = ""
         self.testCaseEntries = list()
         self.description = ""
+        self.component = ""
+        self.priority = ""
 
 
 
@@ -35,8 +37,7 @@ class TestCase:
 
                 else:
                     testData = str(y.index - 1) + " : " + y.text
-                    value = [x.id,x.T42ObjectVersionId, x.T42ObjectId, x.name,  x.version, x.creationDate, x.dOORSId,  x.automation, x.specialFeature, x.testType, x.testDepth, x.specialFeature, testData, x.description]
-                    print(value)
+                    value = [x.id,x.T42ObjectVersionId, x.T42ObjectId, x.name, x.version, x.creationDate, x.dOORSId, x.automation, x.specialFeature, x.testType, x.testDepth, x.specialFeature, testData, x.description, x.component, x.priority]
                     values.append(value)
 
 

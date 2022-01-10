@@ -18,16 +18,30 @@ def writeToCSV(body,header, outPutDirectory):
 
         for tc in body:
             writer.writerows(TC.toString(tc))
+            print(TC.toString(tc))
+
+def sortTestCaseEntry(testCaseObject):
+    sortedTestCaseEntry = list()
+    i = 1
+    while i <= testCaseObject.testCaseEntries.__len__() :
+        for testCaseEntry in testCaseObject.testCaseEntries:
+            if testCaseEntry.index == i:
+                sortedTestCaseEntry.append(testCaseEntry)
+                i += 1
+    testCaseObject.testCaseEntries = sortedTestCaseEntry
+
+    return testCaseObject
+
 
 def getFilename(outPutDirectory):
     filename = outPutDirectory + datetime.now().strftime("%Y-%m-%d-%H-%M") + ".csv"
     return filename
 
-def parse(file,outPutDirectory):
+def parse(file,outPutDirectory,comp,prio):
     content = open(file, "r")
     tree = ET.parse(content)
     root = tree.getroot()
-    header = {1: "Id",2:"T42ObjectId",3:"T42ObjectVersionId",4:"Name",5:"Version",6:"CreationDate",7:"DOORSId",8:"Automation",9:"TestObjectCategory",10:"TestType",11:"TestDepth",12:"SpecialFeature",13:"TestCaseEntries",14:"Description"}
+    header = {1: "Id",2:"T42ObjectId",3:"T42ObjectVersionId",4:"Name",5:"Version",6:"CreationDate",7:"DOORSId",8:"Automation",9:"TestObjectCategory",10:"TestType",11:"TestDepth",12:"SpecialFeature",13:"TestCaseEntries",14:"Description",15:"Component",16:"Priorita"}
     #testCases = root.iter("TestCases")
     #functions = root.iter("Functions")
     testCases = list()
@@ -38,6 +52,8 @@ def parse(file,outPutDirectory):
                 testCase.id = tc.attrib[header[1]]
                 testCase.T42ObjectId = tc.attrib[header[2]]
                 testCase.T42ObjectVersionId = tc.attrib[header[3]]
+                testCase.component = comp
+                testCase.priority = prio
                 for tcc in tc:
                     if tcc.tag.endswith(header[4]):
                         testCase.name = tcc.text
@@ -57,6 +73,8 @@ def parse(file,outPutDirectory):
                         testCase.testDepth = tcc.text
                     elif tcc.tag.endswith(header[12]):
                         testCase.specialFeature = tcc.text
+                    elif tcc.tag.endswith(header[14]):
+                        testCase.description = tcc.text
                     elif tcc.tag.endswith(header[13]):
                         "Vsechny TC v ramci jednoho TC, objekt TestCaseEntries "
                         for tccc in tcc:
@@ -69,7 +87,9 @@ def parse(file,outPutDirectory):
                                 elif tcccc.tag.endswith("Index"):
                                     testCaseEntry.index = int(tcccc.text)
                             testCase.testCaseEntries.append(testCaseEntry)
-                testCases.append(testCase)
+
+                "volame funkci na setrideni testcase entry podle hodnoty indexu"
+                testCases.append(sortTestCaseEntry(testCase))
 
     writeToCSV(testCases,header,outPutDirectory)
     print("Nahrano: ", testCases.__len__())

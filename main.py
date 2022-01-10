@@ -38,7 +38,7 @@ class GuixmlimporterApp:
         self.label4.configure(background='#99de06', text='Priorita:')
         self.label4.grid(column='1', row='9', sticky='w')
         self.lbPriorita = ttk.Entry(self.labelframe)
-        self.txtPriorita = tk.StringVar(value='')
+        self.txtPriorita = tk.StringVar(value='A')
         self.lbPriorita.configure(textvariable=self.txtPriorita)
         self.lbPriorita.grid(column='2', row='9')
         self.btRun = ttk.Button(self.labelframe)
@@ -54,7 +54,7 @@ class GuixmlimporterApp:
         self.pathchooserInputXML.configure(mustexist='true', title='Vyberte XML', type='file')
         self.pathchooserInputXML.grid(column='2', row='1')
         self.pathchooserOutputDir = PathChooserInput(self.labelframe)
-        self.pathchooserOutputDir.configure(mustexist='true', title='Vyberte vystupni adresar', type='file')
+        self.pathchooserOutputDir.configure(mustexist='true', title='Vyberte vystupni adresar', type='directory')
         self.pathchooserOutputDir.grid(column='2', row='2')
         self.text1 = tk.Text(self.labelframe)
         self.text1.configure(height='10', width='50')
@@ -81,7 +81,12 @@ class GuixmlimporterApp:
         self.mainwindow.mainloop()
 
     def clickBtRun(self):
-        tc.parse(self.pathchooserInputXML.cget("path"),self.pathchooserOutputDir.cget("path"))
+        "Doplneni komponenty a priority do testCase, predpoklada se ze komponenta odpovida nazvu sluzby"
+        componenta = self.txtComponent.get()
+        priorita = self.txtPriorita.get()
+        print("Komponenta je:",componenta, " Priorita je:", priorita )
+        "Volani samotne funkce spoustejici nacteni souboru XML a prevod do CSV"
+        tc.parse(self.pathchooserInputXML.cget("path"),self.pathchooserOutputDir.cget("path"),componenta,priorita)
         pass
 
     def clickBtClose(self):
